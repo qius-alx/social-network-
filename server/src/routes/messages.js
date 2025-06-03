@@ -61,9 +61,9 @@ router.get('/history/:peerId', authMiddleware, async (req, res) => {
                 { $set: { isRead: true } }
             );
         }
-        
+
         // The messages are fetched newest first. Client can reverse if they want oldest first.
-        res.json(messages); 
+        res.json(messages);
 
     } catch (error) {
         if (error.kind === 'ObjectId') { // Should be caught by isValid check, but good fallback

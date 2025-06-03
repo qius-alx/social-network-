@@ -56,7 +56,7 @@ router.post('/add', authMiddleware, async (req, res) => {
 
         const newContact = new Contact({ userId: req.user._id, contactId });
         await newContact.save();
-        
+
         // Populate contact details for the response
         const populatedContact = await Contact.findById(newContact._id)
             .populate('contactId', 'username profilePicture bio');
@@ -74,7 +74,7 @@ router.post('/add', authMiddleware, async (req, res) => {
              return res.status(500).json({ message: 'Server error creating contact ID.' });
         }
         // If it's about contactId from req.body, it should have been caught by mongoose.Types.ObjectId.isValid
-        if (error.kind === 'ObjectId') { 
+        if (error.kind === 'ObjectId') {
             return res.status(400).json({ message: 'Invalid ID format for related user.' });
         }
         console.error("Add contact error:", error);
@@ -87,9 +87,9 @@ router.get('/', authMiddleware, async (req, res) => {
     try {
         const contacts = await Contact.find({ userId: req.user._id })
             .populate('contactId', 'username profilePicture bio createdAt'); // Populate with selected user details
-        
+
         // Map to return an array of populated contact user objects directly
-        res.json(contacts.map(c => c.contactId)); 
+        res.json(contacts.map(c => c.contactId));
     } catch (error) {
         console.error("Get contacts error:", error);
         res.status(500).json({ message: 'Server error while fetching contacts.' });
@@ -107,7 +107,7 @@ router.delete('/remove/:contactId', authMiddleware, async (req, res) => {
         if (!mongoose.Types.ObjectId.isValid(contactId)) {
             return res.status(400).json({ message: 'Invalid Contact ID format.' });
         }
-        
+
         const result = await Contact.deleteOne({ userId: req.user._id, contactId });
         if (result.deletedCount === 0) {
             return res.status(404).json({ message: 'Contact not found or you are not authorized to remove this contact.' });
@@ -115,7 +115,7 @@ router.delete('/remove/:contactId', authMiddleware, async (req, res) => {
         res.json({ message: 'Contact removed successfully.' });
     } catch (error) {
         // The ObjectId.isValid check should catch most format errors for contactId.
-        if (error.kind === 'ObjectId') { 
+        if (error.kind === 'ObjectId') {
             return res.status(400).json({ message: 'Invalid contact ID format during operation.' });
         }
         console.error("Remove contact error:", error);

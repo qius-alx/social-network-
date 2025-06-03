@@ -6,7 +6,7 @@ const jwt = require('jsonwebtoken'); // For auth middleware
 const mongoose = require('mongoose'); // For ObjectId validation
 
 // mergeParams allows access to :questionId from parent router when mounted like /:questionId/answers
-const router = express.Router({ mergeParams: true }); 
+const router = express.Router({ mergeParams: true });
 
 // Auth Middleware (ensure this is available, e.g. imported or defined)
 const authMiddleware = async (req, res, next) => {
@@ -38,7 +38,7 @@ router.post('/', authMiddleware, async (req, res) => {
         if (!mongoose.Types.ObjectId.isValid(questionId)) {
             return res.status(400).json({ message: 'Invalid question ID format.' });
         }
-        
+
         const question = await Question.findById(questionId);
         if (!question) {
             return res.status(404).json({ message: 'Question not found to post an answer to.' });
@@ -81,7 +81,7 @@ router.get('/', async (req, res) => {
 });
 
 // Update an answer
-// Route: PUT /api/answers/:answerId 
+// Route: PUT /api/answers/:answerId
 // (Note: This route is defined for /api/answers, not /api/questions/:questionId/answers)
 router.put('/:answerId', authMiddleware, async (req, res) => {
     try {
@@ -108,7 +108,7 @@ router.put('/:answerId', authMiddleware, async (req, res) => {
         answer.content = content.trim();
         // answer.updatedAt = Date.now(); // Model's pre-save hook should handle this
         await answer.save();
-        
+
         const populatedAnswer = await Answer.findById(answer._id).populate('authorId', 'username profilePicture');
         res.json(populatedAnswer);
     } catch (error) {
@@ -212,7 +212,7 @@ router.post('/:answerId/mark-best', authMiddleware, async (req, res) => {
         );
         answer.isBestAnswer = true;
         await answer.save();
-        
+
         const populatedAnswer = await Answer.findById(answer._id)
                                     .populate('authorId', 'username profilePicture')
                                     .populate({ path: 'questionId', select: 'title authorId' }); // Also populate question info

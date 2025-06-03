@@ -38,10 +38,10 @@ router.get('/history', authMiddleware, async (req, res) => {
             .sort({ timestamp: -1 }) // Get newest messages first
             .skip(skip)
             .limit(limit);
-        
+
         // Messages are fetched newest first (e.g., for infinite scroll).
         // Client can reverse if they want oldest first for initial load.
-        res.json(messages); 
+        res.json(messages);
 
     } catch (error) {
         console.error("Get global chat history error:", error);

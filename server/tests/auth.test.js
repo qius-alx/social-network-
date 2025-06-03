@@ -52,7 +52,7 @@ describe('Auth API', () => {
     expect(res.statusCode).toEqual(400);
     expect(res.body.message).toContain('User already exists');
   });
-  
+
   it('should not register a user with an existing username', async () => {
     // First, register the user
     await request(app).post('/api/auth/register').send(testUser);
@@ -69,9 +69,9 @@ describe('Auth API', () => {
     // Register user first - hash the password before saving as User model expects passwordHash
     // The pre-save hook in User.js will hash 'passwordHash' field if it's modified.
     // So, we send the plain password as 'passwordHash' to simulate the model's input.
-    await new User({ 
-        username: testUser.username, 
-        email: testUser.email, 
+    await new User({
+        username: testUser.username,
+        email: testUser.email,
         passwordHash: testUser.password // This will be hashed by the pre-save hook
     }).save();
 
@@ -85,12 +85,12 @@ describe('Auth API', () => {
 
   it('should not log in with invalid credentials (wrong password)', async () => {
     // Ensure user is in DB
-    await new User({ 
-        username: testUser.username, 
-        email: testUser.email, 
-        passwordHash: testUser.password 
+    await new User({
+        username: testUser.username,
+        email: testUser.email,
+        passwordHash: testUser.password
     }).save();
-    
+
     const res = await request(app)
       .post('/api/auth/login')
       .send({ email: testUser.email, password: 'wrongpassword' });
