@@ -78,7 +78,7 @@ router.put('/profile', authMiddleware, async (req, res) => {
             }
             // Else, if undefined, it's not updated.
         }
-        
+
         // username and email updates would require more checks (e.g., uniqueness)
         // and are not included here for simplicity for now.
 
@@ -106,7 +106,7 @@ router.put('/profile', authMiddleware, async (req, res) => {
          // Email search is excluded here to avoid exposing emails unnecessarily through search.
          // If email search is desired, ensure it's handled carefully (e.g., exact match only, or admin only).
          const users = await User.find({
-             username: { $regex: trimmedQuery, $options: 'i' } 
+             username: { $regex: trimmedQuery, $options: 'i' }
          }).select('-passwordHash -email'); // Exclude sensitive info
 
          res.json(users);

@@ -44,13 +44,13 @@ router.post('/ask', authMiddleware, async (req, res) => {
             processedTags = tags.map(tag => {
                 if (typeof tag !== 'string') {
                     // Or throw an error, or filter out non-string tags
-                    console.warn("Non-string tag found and ignored:", tag); 
+                    console.warn("Non-string tag found and ignored:", tag);
                     return ''; // Will be filtered out later or handled by schema
                 }
                 return tag.trim().toLowerCase();
             }).filter(tag => tag.length > 0); // Remove empty tags resulting from trim or non-string
         }
-        
+
         const trimmedTitle = title.trim();
         const trimmedContent = content.trim();
 
@@ -97,7 +97,7 @@ router.get('/', async (req, res) => {
             }
             // 'date' is default
         }
-        
+
         const skip = (page - 1) * limit;
 
         const questions = await Question.find(query)
@@ -105,7 +105,7 @@ router.get('/', async (req, res) => {
             .sort(sortOption)
             .skip(skip)
             .limit(limit);
-        
+
         const totalQuestions = await Question.countDocuments(query);
 
         res.json({
@@ -130,14 +130,14 @@ router.get('/:questionId', async (req, res) => {
 
         const question = await Question.findById(questionId)
             .populate('authorId', 'username profilePicture');
-        
+
         if (!question) {
             return res.status(404).json({ message: 'Question not found.' });
         }
         // Fetch answers separately for now as per example, can be refined with virtuals later
         const answers = await Answer.find({ questionId: questionId })
                                   .populate('authorId', 'username profilePicture')
-                                  .sort({ isBestAnswer: -1, votes: -1, createdAt: -1 }); 
+                                  .sort({ isBestAnswer: -1, votes: -1, createdAt: -1 });
         res.json({ question, answers });
     } catch (error) {
         // The ObjectId.isValid check should catch most format errors,
@@ -192,10 +192,10 @@ router.put('/:questionId', authMiddleware, async (req, res) => {
         if (title !== undefined) question.title = title.trim();
         if (content !== undefined) question.content = content.trim();
         if (processedTags !== undefined) question.tags = processedTags;
-        
+
         // question.updatedAt = Date.now(); // Model's pre-save hook should handle this
         await question.save();
-        
+
         const populatedQuestion = await Question.findById(question._id).populate('authorId', 'username profilePicture');
         res.json(populatedQuestion);
     } catch (error) {

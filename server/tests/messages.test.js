@@ -42,7 +42,7 @@ describe('Message API - History', () => {
         expect(res.body).toBeInstanceOf(Array);
         expect(res.body.length).toEqual(3);
         // Messages are sorted newest first by the route (timestamp: -1)
-        expect(res.body[0].content).toEqual('How are you? (msg test)'); 
+        expect(res.body[0].content).toEqual('How are you? (msg test)');
         expect(res.body[2].content).toEqual('Hello User2 (msg test)');
 
 
@@ -78,6 +78,6 @@ describe('Message API - History', () => {
         // To properly test this, the full app with its authMiddleware should be used.
         // For now, this tests if the route is reachable and returns based on mock.
         // The provided messageRoutes.js has its own authMiddleware, so it should be 401.
-         expect(res.statusCode).toEqual(401); 
+         expect(res.statusCode).toEqual(401);
     });
 });

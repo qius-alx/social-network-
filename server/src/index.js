@@ -95,7 +95,7 @@ io.on('connection', (socket) => {
         if (!receiverId || typeof receiverId !== 'string' || !mongoose.Types.ObjectId.isValid(receiverId)) {
             return socket.emit('messageError', { message: 'Valid receiver ID is required.' });
         }
-        
+
         const trimmedContent = content.trim();
 
         if (receiverId === socket.user._id.toString()) {
@@ -168,7 +168,7 @@ io.on('connection', (socket) => {
             socket.emit('messageError', { message: 'Server error while marking message as read.' });
         }
     });
-    
+
     socket.on('disconnect', () => {
         if (socket.user && socket.user.username) { // Check if socket.user exists
             console.log(`User ${socket.user.username} disconnected`);
@@ -201,10 +201,10 @@ app.use('/api/questions', questionRoutes); // Handles /api/questions and /api/qu
 
 // Mount answer routes
 // For posting/getting answers specific to a question: /api/questions/:questionId/answers
-questionRoutes.use('/:questionId/answers', answerRoutes); 
+questionRoutes.use('/:questionId/answers', answerRoutes);
 
 // For general answer actions like voting, marking best, updating, deleting by answerId
-app.use('/api/answers', answerRoutes); 
+app.use('/api/answers', answerRoutes);
 
 
 app.get('/', (req, res) => {
